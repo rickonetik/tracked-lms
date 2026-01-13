@@ -41,5 +41,8 @@
     "*.{json,md,yml,yaml}": [
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "@nestjs/core": "^10.4.22"
   }
 }
