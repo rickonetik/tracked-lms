@@ -55,14 +55,13 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Clean build artifacts
+        run: |
+          rm -rf node_modules apps/*/node_modules packages/*/node_modules
+          rm -rf apps/*/.vite apps/*/dist apps/*/build
+
       - name: Install dependencies
         run: npm install
-
-      - name: Fix rollup native modules (npm workspaces bug)
-        run: |
-          cd apps/webapp
-          rm -rf node_modules/@rollup
-          npm install --force rollup
 
       - name: Run build
         run: npm run build
