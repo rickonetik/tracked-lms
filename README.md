@@ -15,6 +15,8 @@ Learning Management System с интеграцией Telegram Bot и Mini App.
 - Node.js >= 18.0.0
 - npm (входит в Node.js)
 
+**Важно:** Проект использует npm workspaces. Используйте только `npm` для установки зависимостей.
+
 ## Установка
 
 ```bash
