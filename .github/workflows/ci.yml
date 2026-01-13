@@ -56,7 +56,12 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies
-        run: npm install --no-optional=false
+        run: npm install
+
+      - name: Reinstall rollup native modules
+        run: |
+          cd apps/webapp
+          npm install --force @rollup/rollup-linux-x64-gnu || true
 
       - name: Run build
         run: npm run build
