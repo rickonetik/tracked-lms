@@ -21,11 +21,11 @@ async function bootstrap() {
     app.useGlobalFilters(new http_exception_filter_1.HttpExceptionFilter());
     const port = parseInt(process.env.API_PORT || '3000', 10);
     const host = process.env.API_HOST || '0.0.0.0';
-    await app.listen(port, host);
-    console.log(`🚀 API server is running on http://${host}:${port}`);
-    // Swagger/OpenAPI setup (только в dev режиме)
+    // Swagger/OpenAPI setup (только в dev режиме) - ДО app.listen() для Fastify
     const nodeEnv = process.env.NODE_ENV || 'development';
+    console.log(`[DEBUG] NODE_ENV: ${nodeEnv}`);
     if (nodeEnv === 'development') {
+        console.log('[DEBUG] Setting up Swagger...');
         try {
             const config = new swagger_1.DocumentBuilder()
                 .setTitle('Tracked LMS API')
@@ -33,17 +33,24 @@ async function bootstrap() {
                 .setVersion(process.env.APP_VERSION || '1.0.0')
                 .addTag('health', 'Health check endpoints')
                 .build();
+            console.log('[DEBUG] Creating Swagger document...');
             const document = swagger_1.SwaggerModule.createDocument(app, config);
+            console.log('[DEBUG] Setting up Swagger at /docs...');
             swagger_1.SwaggerModule.setup('docs', app, document);
             console.log(`📚 Swagger documentation available at http://${host}:${port}/docs`);
         }
         catch (error) {
-            console.warn('⚠️  Swagger setup failed:', error instanceof Error ? error.message : String(error));
+            console.error('❌ Swagger setup failed:', error instanceof Error ? error.message : String(error));
             if (error instanceof Error && error.stack) {
-                console.warn('Stack:', error.stack);
+                console.error('Stack:', error.stack);
             }
         }
     }
+    else {
+        console.log(`[DEBUG] Skipping Swagger setup (NODE_ENV=${nodeEnv})`);
+    }
+    await app.listen(port, host);
+    console.log(`🚀 API server is running on http://${host}:${port}`);
 }
 bootstrap();
 //# sourceMappingURL=main.js.map
