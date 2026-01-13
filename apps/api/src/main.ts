@@ -30,6 +30,9 @@ async function bootstrap() {
   const port = parseInt(process.env.API_PORT || '3000', 10);
   const host = process.env.API_HOST || '0.0.0.0';
 
+  await app.listen(port, host);
+  console.log(`🚀 API server is running on http://${host}:${port}`);
+
   // Swagger/OpenAPI setup (только в dev режиме)
   const nodeEnv = process.env.NODE_ENV || 'development';
   if (nodeEnv === 'development') {
@@ -47,11 +50,11 @@ async function bootstrap() {
       console.log(`📚 Swagger documentation available at http://${host}:${port}/docs`);
     } catch (error) {
       console.warn('⚠️  Swagger setup failed:', error instanceof Error ? error.message : String(error));
+      if (error instanceof Error && error.stack) {
+        console.warn('Stack:', error.stack);
+      }
     }
   }
-
-  await app.listen(port, host);
-  console.log(`🚀 API server is running on http://${host}:${port}`);
 }
 
 bootstrap();
