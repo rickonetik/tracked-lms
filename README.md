@@ -13,13 +13,13 @@ Learning Management System с интеграцией Telegram Bot и Mini App.
 ## Требования
 
 - Node.js >= 18.0.0
-- pnpm >= 8.0.0
+- npm (входит в Node.js)
 
 ## Установка
 
 ```bash
 # Установить зависимости
-pnpm install
+npm install
 
 # Настроить переменные окружения
 cp .env.example .env
@@ -28,11 +28,11 @@ cp .env.example .env
 
 ## Команды
 
-- `pnpm build` - Собрать все приложения
-- `pnpm dev` - Запустить все приложения в режиме разработки
-- `pnpm lint` - Проверить код линтером
-- `pnpm typecheck` - Проверить типы TypeScript
-- `pnpm clean` - Очистить артефакты сборки
+- `npm run build` - Собрать все приложения
+- `npm run dev` - Запустить все приложения в режиме разработки
+- `npm run lint` - Проверить код линтером
+- `npm run typecheck` - Проверить типы TypeScript
+- `npm run clean` - Очистить артефакты сборки
 
 ## Разработка
 
@@ -59,12 +59,12 @@ cp .env.example .env
 
 ### Команды
 
-- `pnpm build` - Собрать все приложения
-- `pnpm dev` - Запустить все приложения в режиме разработки
-- `pnpm dev:public` - Запустить ngrok для публичного доступа к WebApp
-- `pnpm lint` - Проверить код линтером
-- `pnpm typecheck` - Проверить типы TypeScript
-- `pnpm clean` - Очистить артефакты сборки
+- `npm run build` - Собрать все приложения
+- `npm run dev` - Запустить все приложения в режиме разработки
+- `npm run dev:public` - Запустить ngrok для публичного доступа к WebApp
+- `npm run lint` - Проверить код линтером
+- `npm run typecheck` - Проверить типы TypeScript
+- `npm run clean` - Очистить артефакты сборки
 
 ### Запуск отдельных сервисов
 
@@ -88,7 +88,7 @@ cd apps/bot && npm run dev
 cd apps/webapp && npm run dev
 
 # 2. В другом терминале запустите ngrok
-pnpm dev:public
+npm run dev:public
 ```
 
 Скрипт автоматически:
