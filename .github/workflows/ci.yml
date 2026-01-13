@@ -58,10 +58,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Reinstall rollup native modules
+      - name: Fix rollup native modules (npm workspaces bug)
         run: |
           cd apps/webapp
-          npm install --force @rollup/rollup-linux-x64-gnu || true
+          rm -rf node_modules/@rollup
+          npm install --force rollup
 
       - name: Run build
         run: npm run build
