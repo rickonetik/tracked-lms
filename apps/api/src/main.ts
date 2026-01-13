@@ -25,14 +25,19 @@ async function bootstrap() {
   console.log('[BOOTSTRAP] CORS enabled');
 
   console.log('[BOOTSTRAP] Setting up global pipes...');
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    })
-  );
-  console.log('[BOOTSTRAP] Global pipes configured');
+  try {
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      })
+    );
+    console.log('[BOOTSTRAP] Global pipes configured');
+  } catch (error) {
+    console.error('[BOOTSTRAP] Error setting up global pipes:', error);
+    throw error;
+  }
 
   console.log('[BOOTSTRAP] Setting up global filters...');
   app.useGlobalFilters(new HttpExceptionFilter());
