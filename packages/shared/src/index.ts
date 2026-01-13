@@ -1,8 +1,3 @@
-/**
- * Shared package для общих типов и констант
- * Используется в apps/api, apps/webapp, apps/bot
- */
+// Shared types and utilities
 
-// Enums
-export { UserRole, type UserRoleType } from './roles.enum';
-export { ErrorCode, type ErrorCodeType } from './error-codes.enum';
+export {};
