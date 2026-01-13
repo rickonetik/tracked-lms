@@ -45,16 +45,15 @@ __decorate([
     __metadata("design:type", String)
 ], EnvironmentVariables.prototype, "APP_VERSION", void 0);
 function validateConfig(config) {
-    // Применяем дефолтные значения
-    const configWithDefaults = {
-        NODE_ENV: Environment.Development,
-        API_PORT: 3000,
-        API_HOST: '0.0.0.0',
-        APP_VERSION: '1.0.0',
-        ...config,
-    };
-    const validatedConfig = (0, class_transformer_1.plainToInstance)(EnvironmentVariables, configWithDefaults, {
-        enableImplicitConversion: true,
+    // Преобразуем API_PORT в число если он строка
+    const apiPort = config.API_PORT
+        ? (typeof config.API_PORT === 'string' ? parseInt(config.API_PORT, 10) : config.API_PORT)
+        : 3000;
+    const validatedConfig = (0, class_transformer_1.plainToInstance)(EnvironmentVariables, {
+        NODE_ENV: config.NODE_ENV || 'development',
+        API_PORT: apiPort,
+        API_HOST: config.API_HOST || '0.0.0.0',
+        APP_VERSION: config.APP_VERSION || '1.0.0',
     });
     const errors = (0, class_validator_1.validateSync)(validatedConfig, {
         skipMissingProperties: false,
