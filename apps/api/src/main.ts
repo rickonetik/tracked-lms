@@ -76,7 +76,15 @@ async function bootstrap() {
       console.log('[DEBUG] Creating Swagger document...');
       const document = SwaggerModule.createDocument(app, config);
       console.log(`[DEBUG] Setting up Swagger at /${docsPath}...`);
-      SwaggerModule.setup(docsPath, app, document);
+      try {
+        SwaggerModule.setup(docsPath, app, document, {
+          useGlobalPrefix: false, // Swagger без глобального префикса
+        });
+        console.log(`[DEBUG] SwaggerModule.setup() completed successfully`);
+      } catch (setupError) {
+        console.error('[DEBUG] SwaggerModule.setup() failed:', setupError);
+        throw setupError;
+      }
 
       console.log(`📚 Swagger documentation available at http://${host}:${port}/${docsPath}`);
     } catch (error) {
