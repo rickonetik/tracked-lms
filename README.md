@@ -13,13 +13,13 @@ Learning Management System с интеграцией Telegram Bot и Mini App.
 ## Требования
 
 - Node.js >= 18.0.0
-- pnpm (используйте только pnpm, не npm/yarn)
+- npm (входит в Node.js)
 
 ## Установка
 
 ```bash
-# Установить зависимости (используйте только pnpm)
-pnpm install
+# Установить зависимости
+npm install
 
 # Настроить переменные окружения
 cp .env.example .env
@@ -28,13 +28,11 @@ cp .env.example .env
 
 ## Команды
 
-**Важно:** Используйте только `pnpm`, не `npm` или `yarn`.
-
-- `pnpm run build` - Собрать все приложения
-- `pnpm run dev` - Запустить все приложения в режиме разработки
-- `pnpm run lint` - Проверить код линтером
-- `pnpm run typecheck` - Проверить типы TypeScript
-- `pnpm run clean` - Очистить артефакты сборки
+- `npm run build` - Собрать все приложения
+- `npm run dev` - Запустить все приложения в режиме разработки
+- `npm run lint` - Проверить код линтером
+- `npm run typecheck` - Проверить типы TypeScript
+- `npm run clean` - Очистить артефакты сборки
 
 ## Разработка
 
@@ -61,24 +59,24 @@ cp .env.example .env
 
 ### Команды
 
-- `pnpm run build` - Собрать все приложения
-- `pnpm run dev` - Запустить все приложения в режиме разработки
-- `pnpm run dev:public` - Запустить ngrok для публичного доступа к WebApp
-- `pnpm run lint` - Проверить код линтером
-- `pnpm run typecheck` - Проверить типы TypeScript
-- `pnpm run clean` - Очистить артефакты сборки
+- `npm run build` - Собрать все приложения
+- `npm run dev` - Запустить все приложения в режиме разработки
+- `npm run dev:public` - Запустить ngrok для публичного доступа к WebApp
+- `npm run lint` - Проверить код линтером
+- `npm run typecheck` - Проверить типы TypeScript
+- `npm run clean` - Очистить артефакты сборки
 
 ### Запуск отдельных сервисов
 
 ```bash
 # API
-cd apps/api && pnpm run dev
+cd apps/api && npm run dev
 
 # WebApp
-cd apps/webapp && pnpm run dev
+cd apps/webapp && npm run dev
 
 # Bot
-cd apps/bot && pnpm run dev
+cd apps/bot && npm run dev
 ```
 
 ### Публичный доступ (ngrok)
@@ -87,10 +85,10 @@ cd apps/bot && pnpm run dev
 
 ```bash
 # 1. Убедитесь что WebApp запущен
-cd apps/webapp && pnpm run dev
+cd apps/webapp && npm run dev
 
 # 2. В другом терминале запустите ngrok
-pnpm run dev:public
+npm run dev:public
 ```
 
 Скрипт автоматически:
