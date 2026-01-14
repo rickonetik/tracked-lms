@@ -19,11 +19,16 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Install dependencies
-        run: npm install --no-optional=false
+        run: pnpm install --frozen-lockfile
 
       - name: Run lint
-        run: npm run lint
+        run: pnpm run lint
 
   typecheck:
     name: TypeCheck
@@ -37,11 +42,16 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Install dependencies
-        run: npm install --no-optional=false
+        run: pnpm install --frozen-lockfile
 
       - name: Run typecheck
-        run: npm run typecheck
+        run: pnpm run typecheck
 
   build:
     name: Build
@@ -55,13 +65,119 @@ jobs:
         with:
           node-version: '18'
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Clean build artifacts
         run: |
           rm -rf node_modules apps/*/node_modules packages/*/node_modules
           rm -rf apps/*/.vite apps/*/dist apps/*/build
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Run build
-        run: npm run build
+        run: pnpm run build
+
+  smoke:
+    name: Smoke Tests
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build API
+        run: pnpm --filter api build
+
+      - name: Start API server
+        env:
+          NODE_ENV: development
+          API_PORT: 3000
+          API_HOST: 0.0.0.0
+        run: |
+          cd apps/api
+          pnpm start &
+          echo $! > /tmp/api.pid
+          echo "Waiting for API to start..."
+          sleep 5
+          for i in {1..30}; do
+            if curl -f http://localhost:3000/health > /dev/null 2>&1; then
+              echo "API is ready!"
+              exit 0
+            fi
+            echo "Waiting for API... ($i/30)"
+            sleep 1
+          done
+          echo "API failed to start"
+          exit 1
+
+      - name: Test /health endpoint
+        run: |
+          echo "Testing /health endpoint..."
+          response=$(curl -s -w "\n%{http_code}" http://localhost:3000/health)
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | head -n-1)
+          echo "HTTP Status: $http_code"
+          echo "Response: $body"
+          if [ "$http_code" != "200" ]; then
+            echo "❌ /health returned $http_code, expected 200"
+            exit 1
+          fi
+          if ! echo "$body" | grep -q '"ok"'; then
+            echo "❌ /health response missing 'ok' field"
+            exit 1
+          fi
+          echo "✅ /health endpoint works"
+
+      - name: Test /docs endpoint
+        run: |
+          echo "Testing /docs endpoint..."
+          http_code=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/docs)
+          echo "HTTP Status: $http_code"
+          if [ "$http_code" != "200" ]; then
+            echo "❌ /docs returned $http_code, expected 200"
+            exit 1
+          fi
+          echo "✅ /docs endpoint works"
+
+      - name: Test /docs-json endpoint
+        run: |
+          echo "Testing /docs-json endpoint..."
+          response=$(curl -s -w "\n%{http_code}" http://localhost:3000/docs-json)
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | head -n-1)
+          echo "HTTP Status: $http_code"
+          if [ "$http_code" != "200" ]; then
+            echo "❌ /docs-json returned $http_code, expected 200"
+            exit 1
+          fi
+          if ! echo "$body" | grep -q '"openapi"'; then
+            echo "❌ /docs-json response missing 'openapi' field"
+            exit 1
+          fi
+          echo "✅ /docs-json endpoint works"
+
+      - name: Stop API server
+        if: always()
+        run: |
+          if [ -f /tmp/api.pid ]; then
+            kill $(cat /tmp/api.pid) || true
+            rm /tmp/api.pid
+          fi
+          pkill -f "node.*dist/main" || true
