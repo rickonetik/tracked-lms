@@ -10,6 +10,7 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const health_module_1 = require("./modules/health/health.module");
+const auth_module_1 = require("./modules/auth/auth.module");
 const config_validation_1 = require("./config/config.validation");
 let AppModule = class AppModule {
 };
@@ -20,14 +21,10 @@ exports.AppModule = AppModule = __decorate([
             config_1.ConfigModule.forRoot({
                 isGlobal: true,
                 validate: config_validation_1.validateConfig,
-                envFilePath: [
-                    '.env.local',
-                    '.env',
-                    '../../.env.local',
-                    '../../.env',
-                ],
+                envFilePath: ['.env.local', '.env', '../../.env.local', '../../.env'],
             }),
             health_module_1.HealthModule,
+            auth_module_1.AuthModule,
         ],
     })
 ], AppModule);

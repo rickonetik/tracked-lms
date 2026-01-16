@@ -19,6 +19,13 @@ export default defineConfig(({ mode }) => {
       port: parseInt(env.WEBAPP_PORT || process.env.WEBAPP_PORT || '5173', 10),
       host: env.WEBAPP_HOST || process.env.WEBAPP_HOST || true,
       allowedHosts: allowedHosts,
+      proxy: {
+        '/api': {
+          target: env.API_URL || process.env.API_URL || 'http://localhost:3001',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+        },
+      },
     },
   };
 });

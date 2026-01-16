@@ -23,4 +23,11 @@ export const config = {
     validateBotToken(token);
     return token;
   })(),
+  // TELEGRAM_WEBAPP_URL - основной URL для Mini App
+  // WEBAPP_NGROK_URL - fallback для dev (из ngrok)
+  TELEGRAM_WEBAPP_URL: (() => {
+    const telegramUrl = process.env.TELEGRAM_WEBAPP_URL || '';
+    const ngrokUrl = process.env.WEBAPP_NGROK_URL || '';
+    return telegramUrl || ngrokUrl;
+  })(),
 };

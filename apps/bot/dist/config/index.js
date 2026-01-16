@@ -9,7 +9,6 @@ function validateBotToken(token) {
     if (!token || token.trim() === '') {
         throw new Error('BOT_TOKEN is required and cannot be empty');
     }
-    // Проверка формата токена Telegram бота (обычно: число:буквы_цифры)
     const tokenPattern = /^\d+:[A-Za-z0-9_-]+$/;
     if (!tokenPattern.test(token)) {
         throw new Error('BOT_TOKEN has invalid format. Expected format: <number>:<string>');
@@ -17,9 +16,16 @@ function validateBotToken(token) {
 }
 export const config = {
     BOT_TOKEN: (() => {
-        const token = getEnvVar('BOT_TOKEN', '8377264786:AAGxdgSJiYLrhxn6ZrYEQlKMhmSukGIsVME');
+        const token = getEnvVar('BOT_TOKEN');
         validateBotToken(token);
         return token;
+    })(),
+    // TELEGRAM_WEBAPP_URL - основной URL для Mini App
+    // WEBAPP_NGROK_URL - fallback для dev (из ngrok)
+    TELEGRAM_WEBAPP_URL: (() => {
+        const telegramUrl = process.env.TELEGRAM_WEBAPP_URL || '';
+        const ngrokUrl = process.env.WEBAPP_NGROK_URL || '';
+        return telegramUrl || ngrokUrl;
     })(),
 };
 //# sourceMappingURL=index.js.map

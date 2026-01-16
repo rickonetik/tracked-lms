@@ -26,12 +26,19 @@ class EnvironmentVariables {
 }
 
 export function validateConfig(config: Record<string, unknown>): EnvironmentVariables {
+  // Преобразуем API_PORT в число если он строка
+  const apiPort = config.API_PORT 
+    ? (typeof config.API_PORT === 'string' ? parseInt(config.API_PORT, 10) : config.API_PORT)
+    : 3000;
+
+  // NODE_ENV из process.env или из config, или 'development' по умолчанию
+  const nodeEnv = process.env.NODE_ENV || (config.NODE_ENV as string) || 'development';
+
   const validatedConfig = plainToInstance(EnvironmentVariables, {
-    NODE_ENV: config.NODE_ENV || 'development',
-    API_PORT: config.API_PORT ? parseInt(config.API_PORT as string, 10) : 3000,
+    NODE_ENV: nodeEnv as Environment,
+    API_PORT: apiPort,
     API_HOST: config.API_HOST || '0.0.0.0',
     APP_VERSION: config.APP_VERSION || '1.0.0',
-    ...config,
   });
 
   const errors = validateSync(validatedConfig, {

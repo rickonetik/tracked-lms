@@ -8,6 +8,15 @@ interface LayoutProps {
 function Layout({ children }: LayoutProps) {
   const location = useLocation();
 
+  // Определяем активный путь (с учетом корня)
+  const getActiveClass = (path: string) => {
+    const currentPath = location.pathname;
+    if (path === '/learning') {
+      return currentPath === '/learning' || currentPath === '/' ? 'active' : '';
+    }
+    return currentPath === path ? 'active' : '';
+  };
+
   return (
     <div className="layout">
       <header className="header">
@@ -15,23 +24,17 @@ function Layout({ children }: LayoutProps) {
       </header>
       <main className="main">{children}</main>
       <nav className="bottom-nav">
-        <Link
-          to="/learning"
-          className={location.pathname === '/learning' ? 'active' : ''}
-        >
-          📚 Обучение
+        <Link to="/learning" className={getActiveClass('/learning')}>
+          <span style={{ fontSize: '1.25rem' }}>📚</span>
+          <span>Обучение</span>
         </Link>
-        <Link
-          to="/expert"
-          className={location.pathname === '/expert' ? 'active' : ''}
-        >
-          🎓 Эксперт
+        <Link to="/expert" className={getActiveClass('/expert')}>
+          <span style={{ fontSize: '1.25rem' }}>🎓</span>
+          <span>Эксперт</span>
         </Link>
-        <Link
-          to="/account"
-          className={location.pathname === '/account' ? 'active' : ''}
-        >
-          👤 Аккаунт
+        <Link to="/account" className={getActiveClass('/account')}>
+          <span style={{ fontSize: '1.25rem' }}>👤</span>
+          <span>Аккаунт</span>
         </Link>
       </nav>
     </div>

@@ -1,0 +1,3 @@
+-- RemoveRoleAddStatus
+ALTER TABLE "users" DROP COLUMN IF EXISTS "role";
+ALTER TABLE "users" ADD COLUMN IF NOT EXISTS "status" TEXT NOT NULL DEFAULT 'active';
