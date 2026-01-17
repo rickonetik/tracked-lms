@@ -7,6 +7,9 @@ import { StudentModule } from './modules/student/student.module';
 import { CoursesModule } from './modules/courses/courses.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
 import { ProgressModule } from './modules/progress/progress.module';
+import { RbacTestModule } from './modules/rbac-test/rbac-test.module';
+import { ExpertModule } from './modules/expert/expert.module';
+import { AdminSubscriptionsModule } from './modules/admin-subscriptions/admin-subscriptions.module';
 import { validateConfig } from './config/config.validation';
 
 @Module({
@@ -23,6 +26,9 @@ import { validateConfig } from './config/config.validation';
     CoursesModule,
     LessonsModule,
     ProgressModule,
+    RbacTestModule,
+    ExpertModule,
+    AdminSubscriptionsModule,
   ],
 })
 export class AppModule {}

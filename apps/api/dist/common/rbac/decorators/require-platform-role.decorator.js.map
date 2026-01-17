@@ -1,0 +1,1 @@
+{"version":3,"file":"require-platform-role.decorator.js","sourceRoot":"","sources":["../../../../src/common/rbac/decorators/require-platform-role.decorator.ts"],"names":[],"mappings":";;;AAAA,2CAA6C;AAGhC,QAAA,0BAA0B,GAAG,wBAAwB,CAAC;AAEnE;;;GAGG;AACI,MAAM,mBAAmB,GAAG,CAAC,GAAG,KAAqB,EAAE,EAAE,CAC9D,IAAA,oBAAW,EAAC,kCAA0B,EAAE,KAAK,CAAC,CAAC;AADpC,QAAA,mBAAmB,uBACiB"}

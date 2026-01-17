@@ -16,6 +16,9 @@ const student_module_1 = require("./modules/student/student.module");
 const courses_module_1 = require("./modules/courses/courses.module");
 const lessons_module_1 = require("./modules/lessons/lessons.module");
 const progress_module_1 = require("./modules/progress/progress.module");
+const rbac_test_module_1 = require("./modules/rbac-test/rbac-test.module");
+const expert_module_1 = require("./modules/expert/expert.module");
+const admin_subscriptions_module_1 = require("./modules/admin-subscriptions/admin-subscriptions.module");
 const config_validation_1 = require("./config/config.validation");
 let AppModule = class AppModule {
 };
@@ -35,6 +38,9 @@ exports.AppModule = AppModule = __decorate([
             courses_module_1.CoursesModule,
             lessons_module_1.LessonsModule,
             progress_module_1.ProgressModule,
+            rbac_test_module_1.RbacTestModule,
+            expert_module_1.ExpertModule,
+            admin_subscriptions_module_1.AdminSubscriptionsModule,
         ],
     })
 ], AppModule);
