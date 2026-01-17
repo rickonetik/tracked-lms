@@ -92,7 +92,14 @@ export function useAuth() {
       // Получаем initData из Telegram
       const initData = WebApp.initData;
       if (!initData) {
-        throw new Error('initData is not available');
+        // Если initData нет, значит мы не в Telegram или данные не готовы
+        setState({
+          isAuthenticated: false,
+          isLoading: false,
+          user: null,
+          error: null,
+        });
+        return;
       }
 
       // Аутентифицируемся

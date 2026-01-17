@@ -12,6 +12,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "grammy": "^1.20.0"
   },
   "devDependencies": {

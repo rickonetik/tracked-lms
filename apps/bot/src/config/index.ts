@@ -1,3 +1,12 @@
+// Загружаем .env из корня проекта ПЕРЕД использованием переменных
+import { config as dotenvConfig } from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+dotenvConfig({ path: resolve(__dirname, '../../../.env') });
+
 function getEnvVar(name: string, defaultValue?: string): string {
   const value = process.env[name];
   if (!value && !defaultValue) {

@@ -1,3 +1,11 @@
+import { config as dotenvConfig } from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+// Получаем __dirname для ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+// Загружаем .env из корня проекта
+dotenvConfig({ path: resolve(__dirname, '../../.env') });
 import { Bot, InlineKeyboard } from 'grammy';
 import { config } from './config';
 const bot = new Bot(config.BOT_TOKEN);

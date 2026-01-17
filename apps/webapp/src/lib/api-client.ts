@@ -61,9 +61,14 @@ export class ApiClient {
   ): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
     const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
       ...(options.headers as Record<string, string>),
     };
+
+    // Добавляем Content-Type только когда body !== undefined
+    // Это исключает случаи, когда body = null или body = ''
+    if (options.body !== undefined) {
+      headers['Content-Type'] = 'application/json';
+    }
 
     // Добавляем токен в заголовки, если он есть
     if (this.accessToken) {
@@ -78,18 +83,50 @@ export class ApiClient {
     // Парсим ответ
     let data: T | ApiError;
     try {
-      data = await response.json();
+      // Сначала читаем текст ответа
+      const text = await response.text();
+      
+      // Если ответ пустой
+      if (!text) {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: Empty response`);
+        }
+        throw new Error('Empty response from server');
+      }
+      
+      // Пытаемся распарсить как JSON
+      try {
+        data = JSON.parse(text);
+      } catch (parseError) {
+        // Если не JSON, это может быть HTML ошибка
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${text.substring(0, 100)}`);
+        }
+        throw new Error(`Failed to parse JSON: ${parseError}`);
+      }
     } catch (e) {
-      throw new Error(`Failed to parse response: ${e}`);
+      // Если это уже наша ошибка с statusCode, пробрасываем дальше
+      if (e instanceof Error && (e as any).statusCode) {
+        throw e;
+      }
+      // Иначе создаем новую ошибку
+      if (!response.ok) {
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        const enhancedError = new Error(errorMessage);
+        (enhancedError as any).statusCode = response.status;
+        throw enhancedError;
+      }
+      throw e;
     }
 
     // Обрабатываем ошибки
     if (!response.ok) {
       const error = data as ApiError;
       const errorMessage = error.message || `HTTP ${response.status}`;
-      // Добавляем статус код в сообщение для обработки 401
+      // Добавляем статус код и error code для обработки разных типов ошибок
       const enhancedError = new Error(errorMessage);
       (enhancedError as any).statusCode = response.status;
+      (enhancedError as any).error = error.error; // Сохраняем error code (ENROLLMENT_REQUIRED, COURSE_NOT_FOUND и т.д.)
       throw enhancedError;
     }
 
@@ -109,7 +146,8 @@ export class ApiClient {
   async post<T>(endpoint: string, body?: unknown): Promise<T> {
     return this.request<T>(endpoint, {
       method: 'POST',
-      body: body ? JSON.stringify(body) : undefined,
+      // Явно передаем undefined для POST без тела (не null, не {})
+      body: body !== undefined ? JSON.stringify(body) : undefined,
     });
   }
 

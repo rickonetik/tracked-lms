@@ -1,0 +1,1 @@
+{"version":3,"file":"student.service.d.ts","sourceRoot":"","sources":["../../../src/modules/student/student.service.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,aAAa,EAAE,MAAM,6BAA6B,CAAC;AAC5D,OAAO,EAAE,SAAS,EAAE,MAAM,kBAAkB,CAAC;AAE7C,qBACa,cAAc;IACb,OAAO,CAAC,QAAQ,CAAC,MAAM;gBAAN,MAAM,EAAE,aAAa;IAElD;;;OAGG;IACG,YAAY,CAAC,MAAM,EAAE,MAAM,GAAG,OAAO,CAAC,SAAS,EAAE,CAAC;CA+HzD"}

@@ -11,6 +11,11 @@ const common_1 = require("@nestjs/common");
 const config_1 = require("@nestjs/config");
 const health_module_1 = require("./modules/health/health.module");
 const auth_module_1 = require("./modules/auth/auth.module");
+const course_structure_module_1 = require("./modules/course-structure/course-structure.module");
+const student_module_1 = require("./modules/student/student.module");
+const courses_module_1 = require("./modules/courses/courses.module");
+const lessons_module_1 = require("./modules/lessons/lessons.module");
+const progress_module_1 = require("./modules/progress/progress.module");
 const config_validation_1 = require("./config/config.validation");
 let AppModule = class AppModule {
 };
@@ -25,6 +30,11 @@ exports.AppModule = AppModule = __decorate([
             }),
             health_module_1.HealthModule,
             auth_module_1.AuthModule,
+            course_structure_module_1.CourseStructureModule,
+            student_module_1.StudentModule,
+            courses_module_1.CoursesModule,
+            lessons_module_1.LessonsModule,
+            progress_module_1.ProgressModule,
         ],
     })
 ], AppModule);

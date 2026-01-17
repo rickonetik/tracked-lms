@@ -20,5 +20,134 @@ model User {
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
+  enrollments    Enrollment[]
+  lessonProgress LessonProgress[]
+
   @@map("users")
+}
+
+model Topic {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  courses Course[]
+
+  @@map("topics")
+}
+
+enum CourseStatus {
+  draft
+  published
+  archived
+}
+
+enum EnrollmentStatus {
+  active
+  expired
+  revoked
+}
+
+enum EnrollmentSource {
+  invite
+  manual
+  public
+}
+
+model Course {
+  id          String       @id @default(uuid())
+  title       String
+  description String?
+  topicId     String?      @map("topic_id")
+  status      CourseStatus @default(draft)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  topic       Topic?       @relation(fields: [topicId], references: [id], onDelete: Restrict)
+  modules     Module[]
+  enrollments Enrollment[]
+
+  @@index([topicId])
+  @@index([status])
+  @@index([status, topicId])
+  @@map("courses")
+}
+
+model Module {
+  id          String   @id @default(uuid())
+  courseId    String   @map("course_id")
+  title       String
+  description String?
+  position    Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  course  Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  lessons Lesson[]
+
+  @@unique([courseId, position])
+  @@index([courseId])
+  @@index([position])
+  @@map("modules")
+}
+
+model Lesson {
+  id          String   @id @default(uuid())
+  moduleId    String   @map("module_id")
+  title       String
+  description String?
+  position    Int
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  module         Module           @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  lessonProgress LessonProgress[]
+
+  @@unique([moduleId, position])
+  @@index([moduleId])
+  @@index([position])
+  @@map("lessons")
+}
+
+model Enrollment {
+  id          String           @id @default(uuid())
+  courseId    String           @map("course_id")
+  studentId   String           @map("student_id")
+  enrolledAt  DateTime         @default(now()) @map("enrolled_at")
+  accessStart DateTime         @default(now()) @map("access_start")
+  accessEnd   DateTime?        @map("access_end")
+  status      EnrollmentStatus @default(active)
+  source      EnrollmentSource @default(manual)
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+
+  course  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  student User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, studentId])
+  @@index([courseId])
+  @@index([studentId])
+  @@index([studentId, status])
+  @@index([courseId, status])
+  @@index([studentId, accessEnd])
+  @@map("enrollments")
+}
+
+model LessonProgress {
+  id          String    @id @default(uuid())
+  lessonId    String    @map("lesson_id")
+  studentId   String    @map("student_id")
+  completedAt DateTime? @map("completed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  lesson  Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  student User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, studentId])
+  @@index([lessonId])
+  @@index([studentId])
+  @@map("lesson_progress")
 }
